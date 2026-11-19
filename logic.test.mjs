@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import { randomPassword, randomPhrase, characterEntropy, phraseEntropy, secureInt, strength, humanTime, LOWER, UPPER, DIGITS, SYMBOLS } from './logic.js';
 const base = {length: 24, lower:true, upper:true, digits:true, symbols:true, unambiguous:false};
 test('password length, required categories',()=>{
@@ -38,4 +39,16 @@ test('display grading/time',()=>{
  assert.equal(strength(35).grade,0);
  assert.equal(strength(90).grade,3);
  assert.equal(humanTime(0),'менше секунди');
+});
+
+test('bundled EFF dictionary is valid, unique and phrase generation works',()=>{
+ const list=readFileSync(new URL('./wordlist.txt',import.meta.url),'utf8').trim().split('\\n');
+ assert.equal(list.length,7772);
+ assert.equal(new Set(list).size,7772);
+ assert.ok(list.every(w=>/^[a-z]+$/.test(w)));
+ for(let i=0;i<20;i++){
+  const phrase=randomPhrase(list,6,'_');
+  assert.equal(phrase.split('_').length,6);
+  assert.ok(phrase.split('_').every(w=>list.includes(w)));
+ }
 });
