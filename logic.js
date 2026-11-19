@@ -4,6 +4,7 @@ export const DIGITS = '0123456789';
 export const SYMBOLS = '!@#$%^&*()-_=+[]{};:,.?/';
 export const AMBIGUOUS = new Set('Il1O0o|');
 export const ATTACK_RATE = 1e10;
+export const PHRASE_SYMBOLS = '!@#$%^&*+?=';
 
 export function secureInt(max, cryptoSource = globalThis.crypto) {
   if (!Number.isSafeInteger(max) || max <= 0 || max > 4294967296) throw new RangeError('invalid random bound');
@@ -38,11 +39,28 @@ export function randomPassword(opts, cryptoSource = globalThis.crypto) {
   throw new Error('Could not satisfy chosen constraints');
 }
 
-export function randomPhrase(words, count, separator = '-', cryptoSource = globalThis.crypto) {
+export function randomPhrase(words, count, separator = '-', cryptoSource = globalThis.crypto, options = {}) {
   if (!Array.isArray(words) || words.length < 1000 || !words.every(w => /^[a-z]+$/.test(w))) throw new Error('Invalid dictionary');
   if (!Number.isInteger(count) || count < 4 || count > 12) throw new RangeError('words: 4..12');
   if (!['-', ' ', '.', '_'].includes(separator)) throw new Error('Invalid separator');
-  return Array.from({ length: count }, () => words[secureInt(words.length, cryptoSource)]).join(separator);
+
+  const selected = Array.from({ length: count }, () => words[secureInt(words.length, cryptoSource)]);
+
+  // Non-zero capitalization mask: every enabled output has >=1 capitalized word.
+  // Each mask is equiprobable; no extra entropy is claimed for deterministic casing.
+  if (options.uppercase) {
+    const mask = 1 + secureInt(2 ** count - 1, cryptoSource);
+    for (let i = 0; i < count; i++) {
+      if (mask & (1 << i)) selected[i] = selected[i][0].toUpperCase() + selected[i].slice(1);
+    }
+  }
+  // Stable, non-overlapping suffix positions allow exact output-count accounting.
+  let result = selected.join(separator);
+  if (options.digits) {
+    result += DIGITS[secureInt(10, cryptoSource)] + DIGITS[secureInt(10, cryptoSource)];
+  }
+  if (options.symbols) result += PHRASE_SYMBOLS[secureInt(PHRASE_SYMBOLS.length, cryptoSource)];
+  return result;
 }
 
 export function characterEntropy(opts) {
@@ -61,9 +79,13 @@ export function characterEntropy(opts) {
   return opts.length * Math.log2(total) + Math.log2(Math.max(Number.MIN_VALUE, probability));
 }
 
-export function phraseEntropy(dictionarySize, count) {
+export function phraseEntropy(dictionarySize, count, options = {}) {
   if (dictionarySize < 2 || count < 1) return 0;
-  return count * Math.log2(dictionarySize);
+  const wordsBits = count * Math.log2(dictionarySize);
+  const capitalizationBits = options.uppercase ? Math.log2(2 ** count - 1) : 0;
+  const digitsBits = options.digits ? Math.log2(100) : 0;
+  const symbolsBits = options.symbols ? Math.log2(PHRASE_SYMBOLS.length) : 0;
+  return wordsBits + capitalizationBits + digitsBits + symbolsBits;
 }
 
 export function estimateSeconds(bits, rate = ATTACK_RATE) {

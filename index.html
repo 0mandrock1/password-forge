@@ -81,7 +81,13 @@
               <option value="_">Підкреслення ( _ )</option>
             </select>
           </label>
-          <p class="small-note">Слова обираються криптографічно з англомовного списку EFF. Це випадкова фраза, а не цитата.</p>
+          <div class="section-label spaced">ДОДАТКОВІ СИМВОЛИ <span>/ OPTIONAL</span></div>
+          <div class="checks phrase-checks">
+            <label><input id="phrase-upper" type="checkbox"><span>Верхній регістр <small>Випадкові слова з великої</small></span></label>
+            <label><input id="phrase-digits" type="checkbox"><span>Цифри <small>2 випадкові наприкінці</small></span></label>
+            <label><input id="phrase-symbols" type="checkbox"><span>Спецсимвол <small>1 випадковий наприкінці</small></span></label>
+          </div>
+          <p class="small-note">Слова обираються криптографічно зі словника EFF. Великі літери розподіляються випадково, цифри й спецсимвол додаються суфіксами; їхня ентропія врахована.</p>
         </div>
       </section>
 

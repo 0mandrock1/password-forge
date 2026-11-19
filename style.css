@@ -116,3 +116,23 @@ kbd{font-size:9px;font-weight:400;margin-left:12px;border-left:1px solid current
  h1{font-size:clamp(2.4rem,9vw,4rem)}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* Compact application header: prioritize generator controls above the fold. */
+.topbar{min-height:56px}
+.brand strong{font-size:25px}
+.hero{padding:18px 0 21px}
+.hero .eyebrow{display:none}
+.hero h1{font-size:clamp(1.8rem,3.4vw,3.15rem);letter-spacing:-.075em;margin:0 0 2px;line-height:1.14}
+.hero p{font-size:12px;line-height:1.5}
+.hero .sigil{display:none}
+.phrase-checks{margin-top:11px}
+.phrase-checks label{min-width:0}
+.phrase-checks label span{min-width:0}
+.phrase-checks small{white-space:normal}
+@media(max-width:900px){.hero{padding:14px 0 16px}}
+@media(max-width:550px){
+ .hero h1{font-size:clamp(1.62rem,7.5vw,2rem)}
+ .hero p{font-size:11px}
+ .topbar{min-height:52px}
+ .phrase-checks{grid-template-columns:minmax(0,1fr)}
+}

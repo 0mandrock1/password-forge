@@ -19,7 +19,7 @@
 | Feature | Details |
 |:--|:--|
 | **Random characters** | Length 8–128, lower/uppercase, digits, symbols. Guarantees at least one character from every enabled set. |
-| **Memorable passphrases** | 4–12 independent words from a locally bundled list based on the EFF long wordlist. Choose a separator. |
+| **Memorable passphrases** | 4–12 independent EFF wordlist words, configurable separator and optional random capitalization, two-digit suffix and a random special-character suffix. |
 | **Strength meter** | Model-based entropy in bits, qualitative strength and a transparent time-to-guess estimate. |
 | **Thoughtful controls** | Exclude similar characters, reveal/mask, copy with one click, keyboard shortcut. |
 | **Accessibility** | Labelled controls, keyboard navigation, readable contrast, responsive layout and reduced-motion support. |
@@ -34,7 +34,7 @@ Built around **design-mandrock0**: arterial-black reds, ultraviolet accents, ter
 - All random choices use <code>crypto.getRandomValues()</code>, with **rejection sampling** to avoid modulo bias.
 - Character-based passwords are sampled **uniformly from strings satisfying the enabled-set constraints**. The implementation rejects any candidate missing a selected set.
 - Passphrases sample each word independently. The dictionary has **7,772 unique alphabetic words** drawn from the [EFF long wordlist](https://www.eff.org/files/2016/07/18/eff_large_wordlist.txt). Four hyphenated entries are omitted to keep the hyphen as an unambiguous separator.
-- Entropy is derived from the number of possible outputs, not arbitrary rules about capitalization or punctuation. In character mode, exact probability correction for required sets uses inclusion-exclusion. In passphrase mode, entropy is <code>word_count × log₂(7772)</code>.
+- Entropy is derived from the number of possible outputs, not arbitrary rules about capitalization or punctuation. In character mode, exact probability correction for required sets uses inclusion-exclusion. In passphrase mode, baseline entropy is <code>word_count × log₂(7772)</code>. Optional additions contribute <code>log₂(2^word_count − 1)</code> for nonempty randomly chosen capitalization masks, <code>log₂(100)</code> for the independent two-digit suffix and <code>log₂(11)</code> for the independent symbol suffix.
 - Time to guess assumes an **offline attacker trying 10 billion guesses per second**, knowing the generator and its parameters, and averages over half the possibilities. It is a *model*, **not a prediction** of how long any specific real-world attack will take.
 - Changing passphrase separators changes readability, **not entropy**; known punctuation contributes no additional security.
 - No generated secret is transmitted, persisted or logged. Copying uses the system clipboard, which may retain the value outside this app.

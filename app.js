@@ -2,6 +2,7 @@ import { randomPassword, randomPhrase, characterEntropy, phraseEntropy, estimate
 
 const el = id => document.getElementById(id);
 const toggles = ['lower','upper','digits','symbols','unambiguous'];
+const phraseToggles = ['phrase-upper','phrase-digits','phrase-symbols'];
 let mode = 'random';
 let words = null;
 let current = '';
@@ -14,6 +15,13 @@ function error(message) {
 function opts() {
   return {length:Number(el('length').value), ...Object.fromEntries(toggles.map(k => [k, el(k).checked]))};
 }
+function phraseOpts() {
+  return {
+    uppercase: el('phrase-upper').checked,
+    digits: el('phrase-digits').checked,
+    symbols: el('phrase-symbols').checked
+  };
+}
 function clampRange(name,min,max) {
   const slider=el(name), number=el(name+'-number');
   const raw=Number(number.value);
@@ -24,7 +32,7 @@ function clampRange(name,min,max) {
 function render() {
   if (!current || (mode === 'phrase' && !words)) return;
   el('password').textContent = visible ? current : '•'.repeat(Math.min(current.length,128));
-  const bits = mode==='random' ? characterEntropy(opts()) : phraseEntropy(words.length,Number(el('words').value));
+  const bits = mode==='random' ? characterEntropy(opts()) : phraseEntropy(words.length,Number(el('words').value),phraseOpts());
   const grade = strength(bits);
   el('strength-label').textContent = grade.text;
   const meter = el('meter-fill').parentElement;
@@ -34,13 +42,13 @@ function render() {
   el('time').textContent = humanTime(estimateSeconds(bits));
   el('attack-desc').textContent = (mode==='random'
     ? 'Модель: повний перебір випадкових комбінацій.'
-    : 'Модель: словниковий перебір комбінацій зі списку EFF, якщо алгоритм генерації відомий.')
+    : 'Модель: перебір усіх комбінацій слів EFF, регістру та ввімкнених випадкових суфіксів, якщо алгоритм відомий.')
     + ' Швидкість: 10 млрд спроб/с офлайн; показано очікуваний час (половина простору пошуку). Оцінка не є гарантією.';
 }
 function generate() {
   try {
     if (mode==='phrase' && !words) { current=''; el('password').textContent='Завантаження словника…'; error('Словник ще завантажується.');return; }
-    const value = mode==='random' ? randomPassword(opts()) : randomPhrase(words,Number(el('words').value),el('separator').value);
+    const value = mode==='random' ? randomPassword(opts()) : randomPhrase(words,Number(el('words').value),el('separator').value,globalThis.crypto,phraseOpts());
     current=value; el('status').textContent='READY';
     el('feedback').textContent='Пароль готовий. Згенеровано локально у браузері.';
     render();
@@ -65,7 +73,7 @@ for(const name of ['length','words']) {
   range.addEventListener('change',generate);
   number.addEventListener('change',()=>{clampRange(name,min,max);generate()});
 }
-for (const name of toggles) el(name).addEventListener('change',generate);
+for (const name of [...toggles, ...phraseToggles]) el(name).addEventListener('change',generate);
 el('separator').addEventListener('change',generate);
 el('generate').addEventListener('click',generate);
 el('show').addEventListener('click',()=>{
