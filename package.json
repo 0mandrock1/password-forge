@@ -1,0 +1,1 @@
+{"name":"password-forge-mandrock0","version":"1.0.0","private":false,"type":"module","scripts":{"test":"node --test logic.test.mjs"},"license":"MIT"}

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="uk" data-accent="purple">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#210710">
+  <meta name="description" content="PASSWORD // FORGE: безпечний локальний генератор паролів і запам'ятовуваних фраз. Web Crypto, словник EFF, оцінка ентропії.">
+  <meta name="referrer" content="no-referrer">
+  <title>PASSWORD // FORGE · Mandrock Tools</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://files.mandrock.me/web/mandrock0-tokens.css">
+  <link rel="stylesheet" href="https://tools.mandrock.me/palettes/accents.css">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+<div class="ambient" aria-hidden="true"></div>
+<main class="shell">
+  <nav class="topbar" aria-label="Навігація">
+    <a class="brand" href="/" aria-label="На головну інструментів"><strong>M<span class="accent">.</span></strong><span>TOOLS<span class="muted"> / SECURITY</span></span></a>
+    <span class="path">/ PASSWORD / FORGE_</span>
+    <span class="local"><span class="led"></span> 100% LOCAL</span>
+  </nav>
+
+  <header class="hero">
+    <div class="eyebrow">[ 01 / RANDOMNESS ENGINE ] <span class="rule"></span> WEB UTILITY</div>
+    <div class="hero-row">
+      <div>
+        <h1>PASSWORD<span class="slashes">//</span><span class="accent">FORGE</span><span class="cursor">_</span></h1>
+        <p>Куй паролі, не передаючи їх нікому. Криптографічна випадковість, контроль замість магії.</p>
+      </div>
+      <div class="sigil" aria-hidden="true"><span>{</span>✳<span>}</span></div>
+    </div>
+  </header>
+
+  <section class="workspace" aria-label="Генератор">
+    <div class="workspace-head">
+      <div><span class="index">01</span> GENERATOR <span class="muted">/ НАЛАШТУВАННЯ</span></div>
+      <span class="ready"><span class="led"></span> CRYPTO.GETRANDOMVALUES</span>
+    </div>
+
+    <div class="columns">
+      <section class="control-pane" aria-label="Параметри генерації">
+        <div class="section-label">МЕТОД ГЕНЕРАЦІЇ <span>/ MODE</span></div>
+        <div class="mode-switch" role="group" aria-label="Режим генерації">
+          <button type="button" class="mode active" id="mode-random" aria-pressed="true"><span>01</span> RANDOM CHARACTERS</button>
+          <button type="button" class="mode" id="mode-phrase" aria-pressed="false"><span>02</span> MEMORABLE</button>
+        </div>
+
+        <div id="random-options">
+          <div class="setting-head"><label for="length">Довжина пароля</label><output id="length-value" for="length">20</output></div>
+          <div class="length-row"><input id="length" type="range" min="8" max="128" value="20" step="1"><input id="length-number" type="number" min="8" max="128" value="20" aria-label="Довжина числом"></div>
+          <div class="range-labels"><span>8</span><span>128 символів</span></div>
+          <div class="section-label spaced">НАБОРИ СИМВОЛІВ <span>/ CHARACTER SETS</span></div>
+          <div class="checks">
+            <label><input id="lower" type="checkbox" checked><span class="check-mark"></span><span>Малі літери <small>a-z</small></span></label>
+            <label><input id="upper" type="checkbox" checked><span class="check-mark"></span><span>Великі літери <small>A-Z</small></span></label>
+            <label><input id="digits" type="checkbox" checked><span class="check-mark"></span><span>Цифри <small>0-9</small></span></label>
+            <label><input id="symbols" type="checkbox" checked><span class="check-mark"></span><span>Спецсимволи <small>!@#...</small></span></label>
+          </div>
+          <label class="secondary-check"><input id="unambiguous" type="checkbox"> Виключити схожі символи <span>0/O, 1/l/I</span></label>
+          <p class="small-note">Кожен увімкнений набір гарантовано присутній у результаті.</p>
+        </div>
+
+        <div id="phrase-options" hidden>
+          <div class="setting-head"><label for="words">Кількість слів</label><output id="words-value" for="words">6</output></div>
+          <div class="length-row"><input id="words" type="range" min="4" max="12" value="6"><input id="words-number" type="number" min="4" max="12" value="6" aria-label="Кількість слів числом"></div>
+          <div class="range-labels"><span>4</span><span>12 слів</span></div>
+          <label class="select-line" for="separator">Розділювач
+            <select id="separator">
+              <option value="-">Дефіс ( - )</option>
+              <option value=" ">Пробіл</option>
+              <option value=".">Крапка ( . )</option>
+              <option value="_">Підкреслення ( _ )</option>
+            </select>
+          </label>
+          <p class="small-note">Слова обираються криптографічно з англомовного списку EFF. Це випадкова фраза, а не цитата.</p>
+        </div>
+      </section>
+
+      <section class="output-pane" aria-label="Згенерований пароль">
+        <div class="output-header"><span><span class="index">02</span> OUTPUT <span class="muted">/ ЗГЕНЕРОВАНО</span></span><span id="status">READY</span></div>
+        <div class="output-card">
+          <div class="result-top"><span class="result-caption">ТВІЙ НОВИЙ ПАРОЛЬ</span><span class="machine">● LOCAL SESSION</span></div>
+          <div class="password-row">
+            <output id="password" class="password" aria-live="off" aria-label="Згенерований пароль">••••••••••••••••••••</output>
+          </div>
+          <div class="actions">
+            <button class="primary" id="generate" type="button"><span>↻</span> ЗГЕНЕРУВАТИ <kbd>Ctrl ↵</kbd></button>
+            <button class="secondary" id="copy" type="button">⧉ КОПІЮВАТИ</button>
+            <button class="icon-button" id="show" type="button" aria-pressed="false" aria-label="Показати пароль" title="Показати або приховати">◉</button>
+          </div>
+        </div>
+
+        <div class="analysis">
+          <div class="metric-title"><span>АНАЛІЗ СТІЙКОСТІ</span><strong id="strength-label" class="strength">—</strong></div>
+          <div class="meter" aria-label="Рівень стійкості"><span id="meter-fill"></span></div>
+          <div class="metrics">
+            <div><span>ЕНТРОПІЯ</span><strong id="entropy">—</strong><small>біт</small></div>
+            <div><span>ОЧІКУВАНИЙ ЧАС ПІДБОРУ</span><strong id="time">—</strong></div>
+          </div>
+          <p id="attack-desc" class="explain">Модель: офлайн-перебір 10 млрд спроб/с. Для випадкового пароля перевіряються можливі комбінації; для фрази словникові комбінації. Це розрахунок, а не гарантія.</p>
+          <p class="explain subdued">Якщо нападник знає алгоритм і параметри генерації, але не знає сам пароль. Для онлайн-входу обмеження спроб часто радикально змінюють час.</p>
+        </div>
+        <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+      </section>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>MANDROCK0 <span class="accent">✳</span> TOOLKIT / OPEN SOURCE</span>
+    <span>Нічого не зберігається, не відправляється й не логуються значення паролів.</span>
+    <a href="https://github.com/0mandrock1/password-forge" target="_blank" rel="noopener noreferrer">SOURCE CODE ↗</a>
+  </footer>
+</main>
+</body>
+</html>
