@@ -39,7 +39,7 @@ function render() {
 }
 function generate() {
   try {
-    if (mode==='phrase' && !words) { error('Словник ще завантажується.');return; }
+    if (mode==='phrase' && !words) { current=''; el('password').textContent='Завантаження словника…'; error('Словник ще завантажується.');return; }
     const value = mode==='random' ? randomPassword(opts()) : randomPhrase(words,Number(el('words').value),el('separator').value);
     current=value; el('status').textContent='READY';
     el('feedback').textContent='Пароль готовий. Згенеровано локально у браузері.';
