@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { randomPassword, randomPhrase, characterEntropy, phraseEntropy, secureInt, strength, humanTime, LOWER, UPPER, DIGITS, SYMBOLS } from './logic.mjs';
+import { randomPassword, randomPhrase, characterEntropy, phraseEntropy, secureInt, strength, humanTime, LOWER, UPPER, DIGITS, SYMBOLS } from './logic.js';
 const base = {length: 24, lower:true, upper:true, digits:true, symbols:true, unambiguous:false};
 test('password length, required categories',()=>{
  for(let i=0;i<200;i++) {

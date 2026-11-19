@@ -59,11 +59,11 @@ No runtime npm dependencies. A local web server is needed because the wordlist i
 
 ## Deploy
 
-Serve index.html, style.css, app.js, logic.mjs and wordlist.txt from a static HTTPS directory. On mandrock.me:
+Serve index.html, style.css, app.js, logic.js and wordlist.txt from a static HTTPS directory. On mandrock.me:
 
 ~~~sh
 install -d -m 755 /var/www/html/_apps/password
-install -m 644 index.html style.css app.js logic.mjs wordlist.txt /var/www/html/_apps/password/
+install -m 644 index.html style.css app.js logic.js wordlist.txt /var/www/html/_apps/password/
 nginx -t && systemctl reload nginx
 ~~~
 

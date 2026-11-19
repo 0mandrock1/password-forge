@@ -1,4 +1,4 @@
-import { randomPassword, randomPhrase, characterEntropy, phraseEntropy, estimateSeconds, strength, humanTime } from './logic.mjs';
+import { randomPassword, randomPhrase, characterEntropy, phraseEntropy, estimateSeconds, strength, humanTime } from './logic.js';
 
 const el = id => document.getElementById(id);
 const toggles = ['lower','upper','digits','symbols','unambiguous'];
