@@ -42,7 +42,7 @@ test('display grading/time',()=>{
 });
 
 test('bundled EFF dictionary is valid, unique and phrase generation works',()=>{
- const list=readFileSync(new URL('./wordlist.txt',import.meta.url),'utf8').trim().split('\\n');
+ const list=readFileSync(new URL('./wordlist.txt',import.meta.url),'utf8').trim().split(String.fromCharCode(10));
  assert.equal(list.length,7772);
  assert.equal(new Set(list).size,7772);
  assert.ok(list.every(w=>/^[a-z]+$/.test(w)));
