@@ -7,6 +7,25 @@ let mode = 'random';
 let words = null;
 let current = '';
 let visible = true;
+let copyResetTimer = null;
+function resetCopyFeedback() {
+  clearTimeout(copyResetTimer);
+  copyResetTimer = null;
+  el('copy').classList.remove('copy-success');
+  el('copy-icon').textContent = '⧉';
+  el('copy-label').textContent = 'КОПІЮВАТИ';
+  el('copy').setAttribute('aria-label','Копіювати пароль');
+}
+function showCopyFeedback() {
+  resetCopyFeedback();
+  // Restart the effect for repeated clicks; text changes immediately.
+  void el('copy').offsetWidth;
+  el('copy').classList.add('copy-success');
+  el('copy-icon').textContent = '✓';
+  el('copy-label').textContent = 'СКОПІЙОВАНО';
+  el('copy').setAttribute('aria-label','Пароль скопійовано');
+  copyResetTimer = setTimeout(resetCopyFeedback,1800);
+}
 
 function error(message) {
   el('feedback').textContent = message;
@@ -46,6 +65,7 @@ function render() {
     + ' Швидкість: 10 млрд спроб/с офлайн; показано очікуваний час (половина простору пошуку). Оцінка не є гарантією.';
 }
 function generate() {
+  resetCopyFeedback();
   try {
     if (mode==='phrase' && !words) { current=''; el('password').textContent='Завантаження словника…'; error('Словник ще завантажується.');return; }
     const value = mode==='random' ? randomPassword(opts()) : randomPhrase(words,Number(el('words').value),el('separator').value,globalThis.crypto,phraseOpts());
@@ -84,10 +104,16 @@ el('show').addEventListener('click',()=>{
 });
 el('copy').addEventListener('click',async()=>{
   if(!current)return;
+  const copiedValue = current;
   try{
-    await navigator.clipboard.writeText(current);
+    await navigator.clipboard.writeText(copiedValue);
+    if(current !== copiedValue) return;
+    showCopyFeedback();
     el('feedback').textContent='Скопійовано. Буфер обміну може зберігати пароль після закриття сторінки.';
-  }catch{error('Браузер заборонив копіювання. Спробуй вручну виділити пароль.');}
+  }catch{
+    resetCopyFeedback();
+    el('feedback').textContent='Не вдалося скопіювати. Виділи пароль вручну.';
+  }
 });
 document.addEventListener('keydown',e=>{
   if(e.key==='Enter' && (e.ctrlKey||e.metaKey)){

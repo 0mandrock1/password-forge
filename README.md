@@ -21,7 +21,7 @@
 | **Random characters** | Length 8–128, lower/uppercase, digits, symbols. Guarantees at least one character from every enabled set. |
 | **Memorable passphrases** | 4–12 independent EFF wordlist words, configurable separator and optional random capitalization, two-digit suffix and a random special-character suffix. |
 | **Strength meter** | Model-based entropy in bits, qualitative strength and a transparent time-to-guess estimate. |
-| **Thoughtful controls** | Exclude similar characters, reveal/mask, copy with one click, keyboard shortcut. |
+| **Thoughtful controls** | Exclude similar characters, reveal/mask, one-click copy with animated inline confirmation and accessible errors, keyboard shortcut. |
 | **Accessibility** | Labelled controls, keyboard navigation, readable contrast, responsive layout and reduced-motion support. |
 | **Privacy by default** | Entirely browser-side. No backend, accounts, cookies, analytics, password history or localStorage. |
 

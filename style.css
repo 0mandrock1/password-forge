@@ -136,3 +136,17 @@ kbd{font-size:9px;font-weight:400;margin-left:12px;border-left:1px solid current
  .topbar{min-height:52px}
  .phrase-checks{grid-template-columns:minmax(0,1fr)}
 }
+
+/* Interaction feedback: confirm copy on the control that initiated the action. */
+.copy-button{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;isolation:isolate;min-width:142px;transition:color .15s,border-color .15s,background .15s,box-shadow .15s}
+.copy-button span{position:relative;z-index:1}
+.copy-button.copy-success{color:var(--background);background:var(--ok);border-color:var(--ok);box-shadow:0 0 14px color-mix(in oklch,var(--ok) 28%,transparent);animation:copy-confirm-pulse .4s ease-out}
+.copy-button.copy-success::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 20%,color-mix(in oklch,var(--foreground) 45%,transparent) 50%,transparent 80%);transform:translateX(-110%);animation:copy-confirm-sweep .55s ease-out forwards}
+.copy-button.copy-success #copy-icon{animation:copy-confirm-icon .35s ease-out}
+@keyframes copy-confirm-pulse{0%{transform:scale(.96)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes copy-confirm-sweep{to{transform:translateX(110%)}}
+@keyframes copy-confirm-icon{0%{opacity:.2;transform:scale(.5)}100%{opacity:1;transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){
+  .copy-button,.copy-button.copy-success,.copy-button.copy-success::after,.copy-button.copy-success #copy-icon{animation:none!important;transition:none!important}
+  .copy-button.copy-success::after{display:none}
+}
